@@ -30,7 +30,7 @@ def stats(data):
     return [
         ("contributions", f"{user['contributionsCollection']['contributionCalendar']['totalContributions']:,}", "", "contributions / yr"),
         ("prs", str(data["merged"]["issueCount"]), "", "prs merged"),
-        ("oss", short(sum(r["stargazerCount"] for r in oss)), "★", "oss i contribute to"),
+        ("oss", short(sum(r["stargazerCount"] for r in oss)), "★", "oss i ship code to"),
     ]
 
 
