@@ -25,7 +25,7 @@ OSS_MIN_STARS = 100  # repos below this don't count as "open source" for the car
 
 def stats(data):
     user = data["user"]
-    oss = [r for r in user["repositoriesContributedTo"]["nodes"] if r["stargazerCount"] >= OSS_MIN_STARS]
+    oss = [r for r in user["repositoriesContributedTo"]["nodes"] if r and r["stargazerCount"] >= OSS_MIN_STARS]  # r is None for repos the token cannot open
     return [
         ("contributions", f"{user['contributionsCollection']['contributionCalendar']['totalContributions']:,}", "", "contributions / yr"),
         ("prs", str(data["merged"]["issueCount"]), "", "prs merged"),
