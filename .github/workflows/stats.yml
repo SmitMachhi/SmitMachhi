@@ -25,13 +25,13 @@ jobs:
 
       - name: Fetch stats
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.STATS_TOKEN || github.token }} # STATS_TOKEN adds private repos
           LOGIN: ${{ github.repository_owner }}
         run: |
           gh api graphql \
             -F query=@.github/scripts/query.graphql \
             -f login="$LOGIN" \
-            -f merged="author:$LOGIN is:pr is:merged is:public" > data.json
+            -f merged="author:$LOGIN is:pr is:merged" > data.json
 
       - run: python .github/scripts/card.py data.json stats .github/fonts
 

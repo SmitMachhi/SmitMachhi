@@ -28,7 +28,7 @@ def stats(data):
     oss = [r for r in user["repositoriesContributedTo"]["nodes"] if r["stargazerCount"] >= OSS_MIN_STARS]
     return [
         ("contributions", f"{user['contributionsCollection']['contributionCalendar']['totalContributions']:,}", "", "contributions / yr"),
-        ("prs", str(data["mergedPublic"]["issueCount"]), "", "prs merged"),
+        ("prs", str(data["merged"]["issueCount"]), "", "prs merged"),
         ("oss", short(sum(r["stargazerCount"] for r in oss)), "★", "oss i contribute to"),
     ]
 

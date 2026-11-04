@@ -7,5 +7,5 @@ query($login: String!, $merged: String!) {
       nodes { nameWithOwner stargazerCount }
     }
   }
-  mergedPublic: search(query: $merged, type: ISSUE) { issueCount }
+  merged: search(query: $merged, type: ISSUE) { issueCount }
 }
