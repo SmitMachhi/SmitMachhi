@@ -1,0 +1,11 @@
+query($login: String!, $merged: String!) {
+  user(login: $login) {
+    contributionsCollection {
+      contributionCalendar { totalContributions }
+    }
+    repositoriesContributedTo(contributionTypes: [PULL_REQUEST, COMMIT], includeUserRepositories: false, first: 100) {
+      nodes { nameWithOwner stargazerCount }
+    }
+  }
+  mergedPublic: search(query: $merged, type: ISSUE) { issueCount }
+}
