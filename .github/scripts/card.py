@@ -1,4 +1,4 @@
-"""Build light + dark stats cards (SVG) from GitHub's contribution data.
+"""Build light + dark stat tiles (one SVG per stat, so each can link somewhere) from GitHub's contribution data.
 
 Usage: python card.py data.json out_dir fonts_dir
 data.json is the response to query.graphql (see .github/workflows/stats.yml).
@@ -19,7 +19,7 @@ THEMES = {
     "dark": {"fg": "#f0f6fc", "muted": "#9198a1", "line": "#3d444d", "accent": "#4493f8"},
 }
 FONT = "'card-mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
-W, H = 720, 104
+W, H = 240, 104  # one tile; README puts three side by side
 OSS_MIN_STARS = 100  # repos below this don't count as "open source" for the card
 
 
@@ -27,9 +27,9 @@ def stats(data):
     user = data["user"]
     oss = [r for r in user["repositoriesContributedTo"]["nodes"] if r["stargazerCount"] >= OSS_MIN_STARS]
     return [
-        (f"{user['contributionsCollection']['contributionCalendar']['totalContributions']:,}", "", "contributions / yr"),
-        (str(data["mergedPublic"]["issueCount"]), "", "prs merged"),
-        (short(sum(r["stargazerCount"] for r in oss)), "★", "oss i contribute to"),
+        ("contributions", f"{user['contributionsCollection']['contributionCalendar']['totalContributions']:,}", "", "contributions / yr"),
+        ("prs", str(data["mergedPublic"]["issueCount"]), "", "prs merged"),
+        ("oss", short(sum(r["stargazerCount"] for r in oss)), "★", "oss i contribute to"),
     ]
 
 
@@ -53,17 +53,10 @@ def font_face(path, weight, text):
     return f"@font-face{{font-family:'card-mono';font-weight:{weight};src:url(data:font/woff;base64,{data}) format('woff')}}"
 
 
-def svg(cols, t, faces):
-    col_w = W / len(cols)
-    body = ""
-    for i, (value, mark, label) in enumerate(cols):
-        cx = col_w * i + col_w / 2
-        star = f'<tspan class="mark" dx="2">{mark}</tspan>' if mark else ""
-        body += f'<text x="{cx:.1f}" y="52" class="num">{value}{star}</text>'
-        body += f'<text x="{cx:.1f}" y="80" class="label">{label}</text>'
-        if i:
-            body += f'<line x1="{col_w * i:.1f}" y1="24" x2="{col_w * i:.1f}" y2="84" stroke="{t["line"]}"/>'
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="{', '.join(f'{v}{m} {l}' for v, m, l in cols)}">
+def svg(value, mark, label, t, faces, divider):
+    star = f'<tspan class="mark" dx="2">{mark}</tspan>' if mark else ""
+    line = f'<line x1="0.5" y1="24" x2="0.5" y2="84" stroke="{t["line"]}"/>' if divider else ""
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="{value}{mark} {label}">
 <style>
 {faces}
 text{{font-family:{FONT};text-anchor:middle}}
@@ -71,7 +64,7 @@ text{{font-family:{FONT};text-anchor:middle}}
 .mark{{fill:{t['accent']}}}
 .label{{font-size:13px;fill:{t['muted']}}}
 </style>
-{body}
+{line}<text x="{W / 2}" y="52" class="num">{value}{star}</text><text x="{W / 2}" y="80" class="label">{label}</text>
 </svg>
 """
 
@@ -81,11 +74,12 @@ def main():
     out, fonts = Path(sys.argv[2]), Path(sys.argv[3])
     out.mkdir(parents=True, exist_ok=True)
     cols = stats(data)
-    faces = font_face(fonts / "IBMPlexMono-SemiBold.ttf", 600, "".join(v + m for v, m, _ in cols)) + font_face(
-        fonts / "IBMPlexMono-Regular.ttf", 400, "".join(label for *_, label in cols)
-    )
-    for name, theme in THEMES.items():
-        (out / f"stats-{name}.svg").write_text(svg(cols, theme, faces), encoding="utf-8")
+    for i, (key, value, mark, label) in enumerate(cols):
+        faces = font_face(fonts / "IBMPlexMono-SemiBold.ttf", 600, value + mark) + font_face(
+            fonts / "IBMPlexMono-Regular.ttf", 400, label
+        )
+        for name, theme in THEMES.items():
+            (out / f"{key}-{name}.svg").write_text(svg(value, mark, label, theme, faces, divider=i > 0), encoding="utf-8")
     print(ascii(cols))
 
 

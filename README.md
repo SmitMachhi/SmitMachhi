@@ -1,6 +1,3 @@
 <div align="center">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="stats/stats-dark.svg">
-  <img alt="github stats" src="stats/stats-light.svg">
-</picture>
+<a href="https://github.com/search?q=author%3ASmitMachhi&type=commits&s=committer-date&o=desc"><picture><source media="(prefers-color-scheme: dark)" srcset="stats/contributions-dark.svg"><img alt="contributions" src="stats/contributions-light.svg"></picture></a><a href="https://github.com/search?q=author%3ASmitMachhi+is%3Apr+is%3Amerged+is%3Apublic&type=pullrequests"><picture><source media="(prefers-color-scheme: dark)" srcset="stats/prs-dark.svg"><img alt="prs" src="stats/prs-light.svg"></picture></a><a href="https://github.com/search?q=author%3ASmitMachhi+is%3Apr+-user%3ASmitMachhi+-user%3Athecaptainsmit&type=pullrequests"><picture><source media="(prefers-color-scheme: dark)" srcset="stats/oss-dark.svg"><img alt="oss" src="stats/oss-light.svg"></picture></a>
 </div>
