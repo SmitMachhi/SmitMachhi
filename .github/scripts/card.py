@@ -39,7 +39,7 @@ def short(n):
 
 def font_face(path, weight, text):
     """Embed only the glyphs the card uses, so each SVG stays a few KB."""
-    font = TTFont(path)
+    font = TTFont(path, recalcTimestamp=False)  # same input -> same bytes, so no daily no-op commits
     opts = subset.Options()
     opts.flavor = "woff"
     opts.layout_features = []
