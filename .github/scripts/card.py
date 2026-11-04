@@ -15,8 +15,9 @@ from fontTools import subset
 from fontTools.ttLib import TTFont
 
 THEMES = {
-    "light": {"fg": "#1f2328", "muted": "#59636e", "line": "#d1d9e0", "accent": "#0969da"},
-    "dark": {"fg": "#f0f6fc", "muted": "#9198a1", "line": "#3d444d", "accent": "#4493f8"},
+    # accent: GitHub blue (#0969da / #4493f8) rotated to red hue, same saturation and lightness
+    "light": {"fg": "#1f2328", "muted": "#59636e", "line": "#d1d9e0", "accent": "#da0909"},
+    "dark": {"fg": "#f0f6fc", "muted": "#9198a1", "line": "#3d444d", "accent": "#f84444"},
 }
 FONT = "'card-mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
 W, H = 240, 104  # one tile; README puts three side by side
