@@ -1,15 +1,7 @@
 query($login: String!, $merged: String!) {
   user(login: $login) {
     contributionsCollection {
-      contributionCalendar {
-        totalContributions
-        weeks {
-          contributionDays {
-            date
-            contributionCount
-          }
-        }
-      }
+      contributionCalendar { totalContributions }
     }
     repositoriesContributedTo(contributionTypes: [PULL_REQUEST, COMMIT], includeUserRepositories: false, first: 100) {
       nodes { nameWithOwner stargazerCount }
